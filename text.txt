@@ -1,1 +1,32 @@
 id advice using REST files to create the API. humao.rest-client - REST file extension for vscode
+
+//////////////////////////////////////////////////////////////////////////
+// also, here's an example of a SQL query using fs to read our .sql files:
+const getAllUsers = () => {
+  if (DEBUG) {
+    console.log(`${__filename}.getAllUsers()`);
+  }
+  return new Promise((resolve, reject) => {
+    fs.readFile(
+      "./services/SQL/users.queryAll.sql",
+      "utf8",
+      (err, sqlQuery) => {
+        if (err) {
+          console.log(err);
+          emitEvent.emit("log", "PG-DAL", "ERROR", err);
+          reject(err);
+        } else {
+          dal.pool.query(sqlQuery, [], (err, result) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          });
+        }
+      }
+    );
+  });
+};
+//////////////////////////////////////////////////////////////////////////
