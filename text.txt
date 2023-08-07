@@ -1,0 +1,1 @@
+id advice using REST files to create the API. humao.rest-client - REST file extension for vscode
