@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Equipment Search</title>
+</head>
+<body>
+  <h1>Search for Equipment</h1>
+  <form id="searchForm" method="GET">
+    <select id="databaseSelect" name="database">
+      <option value="mongodb">MongoDB</option>
+      <option value="postgres">PostgreSQL</option>
+    </select>
+    <input type="text" id="searchInput" name="q" placeholder="Search equipment">
+    <button type="submit">Search</button>
+  </form>
+  
+  <h2>Search Results:</h2>
+  <ul id="searchResults">
+    <!-- Search results will be populated here -->
+  </ul>
+
+  <script>
+    const searchForm = document.getElementById('searchForm');
+    const databaseSelect = document.getElementById('databaseSelect');
+    const searchInput = document.getElementById('searchInput');
+    const searchResultsList = document.getElementById('searchResults');
+
+    searchForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const selectedDatabase = databaseSelect.value;
+      const query = searchInput.value;
+
+      // Fetch search results from the selected database
+      const response = await fetch(`/search?database=${selectedDatabase}&q=${query}`);
+      const searchResults = await response.json();
+
+      // Display search results
+      searchResultsList.innerHTML = searchResults.map(result =>
+        `<li><a href="/rent/${result._id}">${result.name}</a></li>`
+      ).join('');
+    });
+  </script>
+</body>
+</html>
