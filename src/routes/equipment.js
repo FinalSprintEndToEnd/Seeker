@@ -1,51 +1,40 @@
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcryptjs');
-const { MongoDBUser } = require('./user'); // For MongoDB
-const { Pool } = require('pg'); // For PostgreSQL
+const express = require('express');
+const { MongoDAL, PostgresDAL } = require('./dal');
 
-passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    try {
-      const db = req.db;
+const router = express.Router();
+const mongoDAL = new MongoDAL();
+const postgresDAL = new PostgresDAL();
 
-      if (db === req.mongoose) {
-        const user = await MongoDBUser.findOne({ username: username });
-        if (!user) return done(null, false, { message: 'Incorrect username.' });
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) return done(null, false, { message: 'Incorrect password.' });
-        return done(null, user);
-      } else if (db === req.pool) {
-        const result = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-        const user = result.rows[0];
-        if (!user) return done(null, false, { message: 'Incorrect username.' });
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) return done(null, false, { message: 'Incorrect password.' });
-        return done(null, user);
-      }
-    } catch (error) {
-      return done(error);
-    }
-  })
-);
+router.get('/search', async (req, res) => {
+  const selectedDatabase = req.query.database;
+  const query = req.query.q || '';
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
+  let searchResults;
+  if (selectedDatabase === 'mongodb') {
+    searchResults = await mongoDAL.searchEquipment(query);
+  } else if (selectedDatabase === 'postgres') {
+    searchResults = await postgresDAL.searchEquipment(query);
+  }
+
+  res.json(searchResults);
 });
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const db = req.db;
+router.get('/rent/:id', async (req, res) => {
+  const selectedDatabase = req.query.database;
+  const equipmentId = req.params.id;
 
-    if (db === req.mongoose) {
-      const user = await MongoDBUser.findById(id);
-      done(null, user);
-    } else if (db === req.pool) {
-      const result = await db.query('SELECT * FROM users WHERE id = $1', [id]);
-      const user = result.rows[0];
-      done(null, user);
-    }
-  } catch (error) {
-    done(error);
+  let rentedEquipment;
+  if (selectedDatabase === 'mongodb') {
+    rentedEquipment = await mongoDAL.rentEquipment(equipmentId);
+  } else if (selectedDatabase === 'postgres') {
+    rentedEquipment = await postgresDAL.rentEquipment(equipmentId);
+  }
+
+  if (rentedEquipment) {
+    res.render('rent', { equipment: rentedEquipment });
+  } else {
+    res.status(404).send('Equipment not found');
   }
 });
+
+module.exports = router;
