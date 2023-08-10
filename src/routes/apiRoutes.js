@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   try {
     if (DEBUG) console.log(`post request - ${req.url}`);
 
-    await dal.postUser(req.body.name, req.body.password, req.body.email);
+    await dal.postUser(req.body.username, req.body.password, req.body.email);
     res.status(200).send();
   } catch (error) {
     console.error("Error fetching users:", error);

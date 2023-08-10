@@ -40,7 +40,7 @@ const getAllUsers = () => {
   });
 };
 
-// not updated
+// updated  for seeker.
 const getUserByEmail = (Email) => {
   if (DEBUG) {
     console.log(`${__filename}.getUserByName()`);
@@ -69,7 +69,7 @@ const getUserByEmail = (Email) => {
   });
 };
 
-// not updated
+// updated  for seeker.
 const postUser = (name, password, email) => {
   if (DEBUG) {
     console.log(`${__filename}.postUser()`);
@@ -95,7 +95,7 @@ const postUser = (name, password, email) => {
           if (result.rows.length === 0) {
             // User does not exist, proceed with user registration
             fs.readFile(
-              "./services/SQL/users.postUser.sql",
+              "./services/SQL/users.create_user.sql",
               "utf8",
               async (err, postUserQuery) => {
                 if (err) {
@@ -143,14 +143,13 @@ const postUser = (name, password, email) => {
 };
 
 // not updated
-const updateUserInfo = (name, password, email) => {
+const updateUser = (name, password, email) => {
   if (DEBUG) {
-    console.log(`${__filename}.updateUserInfo()`);
+    console.log(`${__filename}.updateUser()`);
   }
-
   return new Promise((resolve, reject) => {
     fs.readFile(
-      "./services/SQL/users.updateUserInfo.sql",
+      "./services/SQL/users.update_user.sql",
       "utf8",
       async (err, sqlQuery) => {
         if (err) {
@@ -161,38 +160,6 @@ const updateUserInfo = (name, password, email) => {
         dal.pool.query(
           sqlQuery,
           [name, await bcrypt.hash(password, 10), email],
-          (err, results) => {
-            if (err) {
-              if (DEBUG) console.log("Error executing update query:", err);
-              return reject(err);
-            }
-            if (DEBUG) console.log("Updated user"); // Log the results to check if any rows were updated
-            resolve(results);
-          }
-        );
-      }
-    );
-  });
-};
-
-// not updated
-const updateUser = (id, name, password, email) => {
-  if (DEBUG) {
-    console.log(`${__filename}.updateUser()`);
-  }
-  return new Promise((resolve, reject) => {
-    fs.readFile(
-      "./services/SQL/users.updateUser.sql",
-      "utf8",
-      async (err, sqlQuery) => {
-        if (err) {
-          if (DEBUG) console.log("Error reading SQL file:", err);
-          reject(err);
-        }
-        if (DEBUG) console.log("SQL Query:", sqlQuery); // Log the SQL query to verify its correctness
-        dal.pool.query(
-          sqlQuery,
-          [id, name, await bcrypt.hash(password, 10), email],
           (err, results) => {
             if (err) {
               if (DEBUG) console.log("Error executing update query:", err);
@@ -249,6 +216,5 @@ module.exports = {
   getUserByEmail,
   postUser,
   updateUser,
-  updateUserInfo,
   deleteUser,
 };

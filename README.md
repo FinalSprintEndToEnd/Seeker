@@ -9,3 +9,5 @@ but my plans if this project continues will be to use live updates from multiple
 # to run the development build.
 
 ### `npm run devStart`
+
+### `This project follows the priciples of K.I.S.S.`
