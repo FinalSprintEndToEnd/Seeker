@@ -11,3 +11,5 @@ but my plans if this project continues will be to use live updates from multiple
 ### `npm run devStart`
 
 ### `This project follows the priciples of K.I.S.S.`
+
+MIT license. Do Not Modify.

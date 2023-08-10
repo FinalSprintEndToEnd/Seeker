@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const logger = require("./src/logger");
 const apiRoutes = require("./src/routes/apiRoutes");
+const equipmentRoutes = require("./src/routes/equipmentRoutes");
 const dal = require("./services/user_pg.DB_ACCESS");
 const events = require("events");
 class Event extends events {}
@@ -31,6 +32,8 @@ app.set("view engine", "ejs");
 //  that means anything that comes after /users can be
 //  used as an argument!!!! : ) <3
 app.use("/users", apiRoutes.router);
+
+app.use("/equipment", equipmentRoutes.router);
 
 ////////////////////////////////////////////////
 // app basic routes
