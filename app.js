@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const logger = require("./src/logger");
-// const userRoutes = require("./routes/userRouter");
+const apiRoutes = require("./src/routes/apiRoutes");
 const dal = require("./services/user_pg.DB_ACCESS");
 const events = require("events");
 class Event extends events {}
@@ -25,7 +25,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
 ////////////////////////////////////////////////
-// app routes
+// app special function routers
+
+//  http://localhost:300/users will trigger this badboy.
+//  that means anything that comes after /users can be
+//  used as an argument!!!! : ) <3
+app.use("/users", apiRoutes.router);
+
+////////////////////////////////////////////////
+// app basic routes
 
 app.get("/", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
@@ -107,17 +115,6 @@ app.post("/signup", async (req, res) => {
 //     res.status(500).json({ error: "Internal Server Error" });
 //   }
 // });
-
-////////////////////////////////////////////////
-// /users router.
-// app.use("/users", userRoutes.router);
-
-////////////////////////////////////////////////
-// this guy is important for signing on
-app.get("/:username", async (req, res) => {
-  emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("index.ejs");
-});
 
 ////////////////////////////////////////////////
 // listener
