@@ -47,7 +47,7 @@ const getUserByEmail = (Email) => {
   }
   return new Promise((resolve, reject) => {
     fs.readFile(
-      "./services/SQL/users.queryUser.sql",
+      "./services/SQL/users.view_user.sql",
       "utf8",
       (err, sqlQuery) => {
         if (err) {
@@ -142,7 +142,7 @@ const postUser = (name, password, email) => {
   });
 };
 
-// not updated
+// updated  for seeker.
 const updateUser = (name, password, email) => {
   if (DEBUG) {
     console.log(`${__filename}.updateUser()`);
@@ -175,14 +175,14 @@ const updateUser = (name, password, email) => {
 };
 
 // not udpated
-const deleteUser = (name) => {
+const deleteUser = (email) => {
   if (DEBUG) {
     console.log(`${__filename}.deleteUser()`);
   }
 
   return new Promise((resolve, reject) => {
     fs.readFile(
-      "./services/SQL/users.deleteUser.sql",
+      "./services/SQL/users.delete_user.sql",
       "utf8",
       (err, sqlQuery) => {
         if (err) {
@@ -190,7 +190,7 @@ const deleteUser = (name) => {
           reject(err);
         }
         if (DEBUG) console.log("SQL Query:", sqlQuery); // Log the SQL query to verify its correctness
-        dal.pool.query(sqlQuery, [name], (err, results) => {
+        dal.pool.query(sqlQuery, [email], (err, results) => {
           if (err) {
             if (DEBUG) console.log("Error executing delete query:", err);
             return reject(err);

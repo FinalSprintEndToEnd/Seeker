@@ -26,60 +26,39 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:username", async (req, res) => {
-  try {
-    if (DEBUG) console.log(`get request - ${req.url}`);
-
-    const user = await dal.getUserByName(req.params.username);
-    if (user) {
-      res.status(200).json(user.rows);
-    } else {
-      res.status(404).json({ error: "User not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-router.put("/:username", async (req, res) => {
-  try {
-    if (DEBUG) console.log(`put request - ${req.url}`);
-
-    const user = await dal.getUserByName(req.params.username);
-    if (user && user.rows.length > 0) {
-      const userId = user.rows[0].id; // Access the 'id' property of the first user in the array
-      await dal.updateUser(
-        userId, // Use the userId here
-        req.body.name,
-        req.body.password,
-        req.body.email
-      );
-    } else {
-      res.status(404).json({ error: "User not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-router.patch("/:username", async (req, res) => {
+router.patch("/:email", async (req, res) => {
   try {
     if (DEBUG) console.log(`patch request - ${req.url}`);
 
-    const user = await dal.getUserByName(req.params.username);
+    const user = await dal.getUserByEmail(req.params.email);
     if (user && user.rows.length > 0) {
-      await dal.updateUserInfo(
-        req.params.username,
+      await dal.updateUser(
+        req.body.username,
         req.body.password,
-        req.body.email
+        req.params.email
       );
     } else {
       res.status(404).json({ error: "User not found" });
     }
   } catch (error) {
     console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.delete("/:email", async (req, res) => {
+  try {
+    if (DEBUG) console.log(`delete request - ${req.url}`);
+
+    const user = await dal.getUserByEmail(req.params.email);
+    if (user && user.rows.length > 0) {
+      await dal.deleteUser(req.params.email); // Assuming you have a deleteUser function
+      res.status(200).json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

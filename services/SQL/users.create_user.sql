@@ -1,2 +1,2 @@
 INSERT INTO public.user (username, email, password)
-VALUES ($1, $2, $3);
+VALUES ($1, $3, $2);
