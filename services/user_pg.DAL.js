@@ -10,6 +10,8 @@ const emitEvent = new Event();
 
 ////////////////////////////////////////////////
 // method functions
+
+// updated  for seeker.
 const getAllUsers = () => {
   if (DEBUG) {
     console.log(`${__filename}.getAllUsers()`);
@@ -38,7 +40,8 @@ const getAllUsers = () => {
   });
 };
 
-const getUserByName = (userName) => {
+// not updated
+const getUserByEmail = (Email) => {
   if (DEBUG) {
     console.log(`${__filename}.getUserByName()`);
   }
@@ -52,7 +55,7 @@ const getUserByName = (userName) => {
           emitEvent.emit("log", "PG-DAL", "ERROR", err);
           reject(err);
         } else {
-          dal.pool.query(sqlQuery, [userName], (err, result) => {
+          dal.pool.query(sqlQuery, [Email], (err, result) => {
             if (err) {
               console.log(err);
               reject(err);
@@ -66,13 +69,14 @@ const getUserByName = (userName) => {
   });
 };
 
+// not updated
 const postUser = (name, password, email) => {
   if (DEBUG) {
     console.log(`${__filename}.postUser()`);
   }
   return new Promise((resolve, reject) => {
     fs.readFile(
-      "./services/SQL/users.queryUser.sql",
+      "./services/SQL/users.view_user.sql",
       "utf8",
       (err, sqlQuery) => {
         if (err) {
@@ -81,7 +85,7 @@ const postUser = (name, password, email) => {
           return reject(err);
         }
 
-        dal.pool.query(sqlQuery, [name], (err, result) => {
+        dal.pool.query(sqlQuery, [email], (err, result) => {
           if (err) {
             console.log(err);
             emitEvent.emit("log", "PG-DAL", "ERROR", err);
@@ -138,6 +142,7 @@ const postUser = (name, password, email) => {
   });
 };
 
+// not updated
 const updateUserInfo = (name, password, email) => {
   if (DEBUG) {
     console.log(`${__filename}.updateUserInfo()`);
@@ -170,6 +175,7 @@ const updateUserInfo = (name, password, email) => {
   });
 };
 
+// not updated
 const updateUser = (id, name, password, email) => {
   if (DEBUG) {
     console.log(`${__filename}.updateUser()`);
@@ -201,6 +207,7 @@ const updateUser = (id, name, password, email) => {
   });
 };
 
+// not udpated
 const deleteUser = (name) => {
   if (DEBUG) {
     console.log(`${__filename}.deleteUser()`);
@@ -239,7 +246,7 @@ emitEvent.on("log", (event, level, message) => {
 // Exports
 module.exports = {
   getAllUsers,
-  getUserByName,
+  getUserByEmail,
   postUser,
   updateUser,
   updateUserInfo,
