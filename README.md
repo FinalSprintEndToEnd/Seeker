@@ -6,6 +6,6 @@ The intention of this project is to create a portal for consultants to easily es
 
 but my plans if this project continues will be to use live updates from multiple different sources to provide the lowest available cost for quotes.
 
-### `npm run devStart`
+# to run the development build.
 
-this command starts our app.
+### `npm run devStart`
