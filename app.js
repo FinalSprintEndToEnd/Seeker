@@ -47,7 +47,10 @@ app.get("/login", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
   res.render("login.ejs");
 });
-
+app.get("/about", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("about.ejs");
+});
 app.post("/login", async (req, res) => {
   const username = await req.body.username;
   const password = await req.body.password;
