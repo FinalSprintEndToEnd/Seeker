@@ -13,6 +13,7 @@ const emitEvent = new Event();
 const app = express();
 const PORT = 3000;
 const searchRoutes = require("./src/routes/searchRoutes");
+const { max } = require("date-fns");
 ////////////////////////////////////////////////
 // global constants
 global.DEBUG = true;
@@ -82,6 +83,11 @@ app.post("/login", async (req, res) => {
       (await bcrypt.compare(password, userData.rows[0].password))
     ) {
       console.log("Login succesful");
+      res.cookie(
+        "email",
+        userData.rows[0].email,
+        (maxAge = 1000 * 60 * 60 * 24 * 7)
+      );
       res.redirect("/success");
     } else {
       res.send(
