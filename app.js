@@ -72,7 +72,10 @@ app.get("/success", async (req, res) => {
 //   emitEvent.emit("log", "app", `POST`, req.url);
 //   res.render("search.ejs");
 // });
-
+app.get("favicon.ico", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("favicon.ico");
+});
 app.post("/login", async (req, res) => {
   const email = await req.body.email;
   const password = await req.body.password;

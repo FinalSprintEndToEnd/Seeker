@@ -32,8 +32,8 @@ const getEquipment = async (req, res, query) => {
     .find(filter)
     .toArray()
     .then((equipment) => {
-      // Respond with JSON data
-      res.render("search.ejs", { equipment: equipment, req: req }); // Passing the req object to the view
+      console.log(equipment);
+      res.render("search.ejs", { equipment: equipment, req: req });
     })
     .catch((error) => {
       console.error("Error retrieving equipment data:", error);

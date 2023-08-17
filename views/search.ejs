@@ -24,7 +24,7 @@
       <h2>Search Results:</h2>
       <div id="searchResults">
         <% if(typeof(equipment) !== 'undefined') { %>  
-            <% include('partials/equipmentList.ejs') %> 
+          <%- include('partials/equipmentList.ejs', { equipment: equipment }) %>
         <% } %>
       </div>
   </body>
