@@ -12,8 +12,13 @@ class Event extends events {}
 const emitEvent = new Event();
 const app = express();
 const PORT = 3000;
-const searchRoutes = require("./src/routes/searchRoutes");
 const { max } = require("date-fns");
+var cookieParser = require("cookie-parser");
+const {
+  getEquipment,
+  addEquipment,
+  deleteEquipment,
+} = require("./services/constEquip_mg.DAL");
 ////////////////////////////////////////////////
 // global constants
 global.DEBUG = true;
@@ -26,7 +31,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("favicon.ico"));
-app.use("/search", searchRoutes.router);
+app.use(cookieParser());
 ////////////////////////////////////////////////
 // app special function routers
 
@@ -42,20 +47,20 @@ app.use("/equipment", equipmentRoutes.router);
 
 app.get("/", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("index.ejs");
+  res.render("index.ejs", { req: req });
 });
 
 app.get("/login", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("login.ejs");
+  res.render("login.ejs", { req: req });
 });
 app.get("/about", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("about.ejs");
+  res.render("about.ejs", { req: req });
 });
 app.get("/success", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("success.ejs");
+  res.render("success.ejs", { req: req });
 });
 // // get for search
 // app.get("/search", async (req, res) => {
@@ -102,7 +107,11 @@ app.post("/login", async (req, res) => {
 
 app.get("/signup", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("signup.ejs");
+  res.render("signup.ejs", { req: req });
+});
+app.get("/logout", async (req, res) => {
+  res.clearCookie("email");
+  res.redirect("/");
 });
 
 app.post("/signup", async (req, res) => {
@@ -120,6 +129,35 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.get("/search-page", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("search.ejs", { req: req });
+});
+
+app.post("/search", async (req, res) => {
+  const { database, query } = req.body;
+
+  // Validate database type and call right function
+  if (database === "mongo") {
+    // We pass the query into getEquipment function
+    try {
+      await getEquipment(req, res, query);
+    } catch (error) {
+      console.error("Error retrieving equipment data:", error);
+      res.status(500).json({
+        success: false,
+        error: "Internal Server Error",
+      });
+    }
+  } else if (database === "postgres") {
+    // Call the PostgreSQL method here
+  } else {
+    res.status(400).json({
+      success: false,
+      error: "Invalid database selected",
+    });
   }
 });
 
