@@ -41,7 +41,7 @@ const getAllUsers = () => {
 };
 
 // updated  for seeker.
-const getUserByEmail = (Email) => {
+const getUserByEmail = (email) => {
   if (DEBUG) {
     console.log(`${__filename}.getUserByName()`);
   }
@@ -55,7 +55,7 @@ const getUserByEmail = (Email) => {
           emitEvent.emit("log", "PG-DAL", "ERROR", err);
           reject(err);
         } else {
-          dal.pool.query(sqlQuery, [Email], (err, result) => {
+          dal.pool.query(sqlQuery, [email], (err, result) => {
             if (err) {
               console.log(err);
               reject(err);

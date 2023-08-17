@@ -6,13 +6,13 @@ const bcrypt = require("bcrypt");
 const logger = require("./src/logger");
 const apiRoutes = require("./src/routes/apiRoutes");
 const equipmentRoutes = require("./src/routes/equipmentRoutes");
-const dal = require("./services/user_pg.DB_ACCESS");
+const dal = require("./services/user_pg.DAL");
 const events = require("events");
 class Event extends events {}
 const emitEvent = new Event();
 const app = express();
 const PORT = 3000;
-
+const searchRoutes = require("./src/routes/searchRoutes");
 ////////////////////////////////////////////////
 // global constants
 global.DEBUG = true;
@@ -24,7 +24,8 @@ app.use("/images", express.static("views/images"));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-
+app.use(express.static("favicon.ico"));
+app.use("/search", searchRoutes.router);
 ////////////////////////////////////////////////
 // app special function routers
 
@@ -51,8 +52,23 @@ app.get("/about", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
   res.render("about.ejs");
 });
+app.get("/success", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("success.ejs");
+});
+// // get for search
+// app.get("/search", async (req, res) => {
+//   emitEvent.emit("log", "app", `GET`, req.url);
+//   res.render("search.ejs");
+// });
+// // post for search
+// app.post("/search", async (req, res) => {
+//   emitEvent.emit("log", "app", `POST`, req.url);
+//   res.render("search.ejs");
+// });
+
 app.post("/login", async (req, res) => {
-  const username = await req.body.username;
+  const email = await req.body.email;
   const password = await req.body.password;
   try {
     if (DEBUG) {
@@ -60,13 +76,13 @@ app.post("/login", async (req, res) => {
     }
     emitEvent.emit("log", "app", `POST`, req.url);
 
-    const userData = await dal.getUserByName(username);
+    const userData = await dal.getUserByEmail(email);
     if (
-      username === userData.rows[0].name &&
+      email === userData.rows[0].email &&
       (await bcrypt.compare(password, userData.rows[0].password))
     ) {
       console.log("Login succesful");
-      res.redirect("/");
+      res.redirect("/success");
     } else {
       res.send(
         '<script>alert("Invalid credentials. Please try again."); window.location.href = "/login";</script>'

@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Sign Up</title>
-</head>
-<body>
-  <h1>Sign Up</h1>
-  <form action="/signup" method="POST">
-    <label for="username">Username:</label>
-    <input type="text" name="username" required><br>
-    <label for="password">Password:</label>
-    <input type="password" name="password" required><br>
-    <button type="submit">Sign Up</button>
-  </form>
-  <p>Already have an account? <a href="/login">Login</a></p>
-</body>
+  <head>
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <header><%- include('partials/header.ejs')%></header>
+  <body>
+    <div></div>
+    <div class="forms-container">
+      <h1>Sign Up</h1>
+      <form class="forms" action="/signup" method="POST">
+        <label for="email">Email:</label>
+        <input type="email" name="email" required /><br />
+        <label for="username">Username:</label>
+        <input type="text" name="username" required /><br />
+        <label for="password">Password:</label>
+        <input type="password" name="password" required /><br />
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="/login">Login</a></p>
+    </div>
+  </body>
 </html>

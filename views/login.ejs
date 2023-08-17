@@ -2,18 +2,21 @@
 <html>
   <head>
     <title>Login</title>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <header><%- include('partials/header.ejs') %></header>
   <body>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-      <label for="username">Username:</label>
-      <input type="text" name="username" required /><br />
-      <label for="password">Password:</label>
-      <input type="password" name="password" required /><br />
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+    <div class="forms-container">
+      <h1>Login</h1>
+      <form action="/login" method="POST">
+        <label for="email">Email:</label>
+        <input type="text" name="email" required /><br />
+        <label for="password">Password:</label>
+        <input type="password" name="password" required /><br />
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account? <a href="/signup">Sign Up</a></p>
+    </div>
   </body>
   <footer><%- include('partials/footer.ejs') %></footer>
 </html>
