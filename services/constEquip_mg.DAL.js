@@ -32,7 +32,7 @@ const getEquipment = async (req, res, query) => {
     .find(filter)
     .toArray()
     .then((equipment) => {
-      console.log(equipment);
+      // console.log(equipment);
       res.render("search.ejs", { equipment: equipment, req: req });
     })
     .catch((error) => {

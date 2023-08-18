@@ -13,6 +13,7 @@ const emitEvent = new Event();
 const app = express();
 const PORT = 3000;
 const { max } = require("date-fns");
+const { program } = require("commander");
 var cookieParser = require("cookie-parser");
 const {
   getEquipment,
@@ -155,7 +156,9 @@ app.post("/search", async (req, res) => {
       });
     }
   } else if (database === "postgres") {
-    // Call the PostgreSQL method here
+    console.log(
+      "We misunderstood this part of the assignment until we got the UI stage... There is a working mock user database that uses postgres with functionality for commands to edit, add or delete. The mongo DB is for the products list... so we're just going to leave this here for now. : ) <3"
+    );
   } else {
     res.status(400).json({
       success: false,

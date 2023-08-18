@@ -13,9 +13,9 @@ const emitEvent = new Event();
 
 // updated  for seeker.
 const getAllUsers = () => {
-  if (DEBUG) {
-    console.log(`${__filename}.getAllUsers()`);
-  }
+  // if (DEBUG) {
+  //   console.log(`${__filename}.getAllUsers()`);
+  // }
   return new Promise((resolve, reject) => {
     fs.readFile(
       "./services/SQL/users.view_all.sql",
@@ -42,9 +42,9 @@ const getAllUsers = () => {
 
 // updated  for seeker.
 const getUserByEmail = (email) => {
-  if (DEBUG) {
-    console.log(`${__filename}.getUserByName()`);
-  }
+  // if (DEBUG) {
+  //   console.log(`${__filename}.getUserByName()`);
+  // }
   return new Promise((resolve, reject) => {
     fs.readFile(
       "./services/SQL/users.view_user.sql",
@@ -71,9 +71,9 @@ const getUserByEmail = (email) => {
 
 // updated  for seeker.
 const postUser = (name, password, email) => {
-  if (DEBUG) {
-    console.log(`${__filename}.postUser()`);
-  }
+  // if (DEBUG) {
+  //   console.log(`${__filename}.postUser()`);
+  // }
   return new Promise((resolve, reject) => {
     fs.readFile(
       "./services/SQL/users.view_user.sql",
@@ -144,9 +144,9 @@ const postUser = (name, password, email) => {
 
 // updated  for seeker.
 const updateUser = (name, password, email) => {
-  if (DEBUG) {
-    console.log(`${__filename}.updateUser()`);
-  }
+  // if (DEBUG) {
+  //   console.log(`${__filename}.updateUser()`);
+  // }
   return new Promise((resolve, reject) => {
     fs.readFile(
       "./services/SQL/users.update_user.sql",
@@ -176,9 +176,9 @@ const updateUser = (name, password, email) => {
 
 // not udpated
 const deleteUser = (email) => {
-  if (DEBUG) {
-    console.log(`${__filename}.deleteUser()`);
-  }
+  // if (DEBUG) {
+  //   console.log(`${__filename}.deleteUser()`);
+  // }
 
   return new Promise((resolve, reject) => {
     fs.readFile(
