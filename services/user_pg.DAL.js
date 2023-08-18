@@ -104,7 +104,7 @@ const postUser = (name, password, email) => {
                   return reject(err);
                 }
 
-                if (DEBUG) console.log("Creating user");
+                // if (DEBUG) console.log("Creating user");
                 try {
                   await dal.pool.query(postUserQuery, [
                     name,

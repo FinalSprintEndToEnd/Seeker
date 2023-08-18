@@ -105,7 +105,9 @@ app.post("/login", async (req, res) => {
     }
   } catch (error) {
     console.error("Error fetching users:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.send(
+      '<script>alert("Invalid credentials. Please try again."); window.location.href = "/login";</script>'
+    );
   }
 });
 
