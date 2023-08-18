@@ -111,7 +111,7 @@ const postUser = (name, password, email) => {
                     await bcrypt.hash(password, 10),
                     email,
                   ]);
-                  if (DEBUG) console.log("User created successfully");
+                  // if (DEBUG) console.log("User created successfully");
                   emitEvent.emit(
                     "log",
                     "PG-DAL",
@@ -153,19 +153,19 @@ const updateUser = (name, password, email) => {
       "utf8",
       async (err, sqlQuery) => {
         if (err) {
-          if (DEBUG) console.log("Error reading SQL file:", err);
+          // if (DEBUG) console.log("Error reading SQL file:", err);
           reject(err);
         }
-        if (DEBUG) console.log("SQL Query:", sqlQuery); // Log the SQL query to verify its correctness
+        // if (DEBUG) console.log("SQL Query:", sqlQuery);
         dal.pool.query(
           sqlQuery,
           [name, await bcrypt.hash(password, 10), email],
           (err, results) => {
             if (err) {
-              if (DEBUG) console.log("Error executing update query:", err);
+              // if (DEBUG) console.log("Error executing update query:", err);
               return reject(err);
             }
-            if (DEBUG) console.log("Updated user"); // Log the results to check if any rows were updated
+            // if (DEBUG) console.log("Updated user");
             resolve(results);
           }
         );
@@ -186,16 +186,16 @@ const deleteUser = (email) => {
       "utf8",
       (err, sqlQuery) => {
         if (err) {
-          if (DEBUG) console.log("Error reading SQL file:", err);
+          // if (DEBUG) console.log("Error reading SQL file:", err);
           reject(err);
         }
-        if (DEBUG) console.log("SQL Query:", sqlQuery); // Log the SQL query to verify its correctness
+        // if (DEBUG) console.log("SQL Query:", sqlQuery);
         dal.pool.query(sqlQuery, [email], (err, results) => {
           if (err) {
-            if (DEBUG) console.log("Error executing delete query:", err);
+            // if (DEBUG) console.log("Error executing delete query:", err);
             return reject(err);
           }
-          if (DEBUG) console.log("Deleted user"); // Log the results to check if any rows were updated
+          // if (DEBUG) console.log("Deleted user");
           resolve(results);
         });
       }
