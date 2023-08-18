@@ -51,5 +51,11 @@ program
       .then((result) => console.log(result))
       .catch((error) => console.error(error));
   });
+program
+  .command("help")
+  .description("Display help for commands")
+  .action(() => {
+    program.outputHelp();
+  });
 
 program.parse(process.argv);
