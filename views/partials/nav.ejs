@@ -1,4 +1,13 @@
 <nav>
-  <a href="/login">Login</a>
-  <a href="/signup">Sign-up</a>
+  <ul>
+    <a href="/">Home</a>
+    <a href="/about">About</a>
+    <% if (!req.cookies.email) { %>
+    <a href="/signup">Sign-up</a>
+    <a href="/login">Login</a>
+    <% } else { %>
+    <a href="/logout">Logout</a>
+    <a href="/search-page">Search</a>
+    <% } %>
+  </ul>
 </nav>

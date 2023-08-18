@@ -6,13 +6,20 @@ const bcrypt = require("bcrypt");
 const logger = require("./src/logger");
 const apiRoutes = require("./src/routes/apiRoutes");
 const equipmentRoutes = require("./src/routes/equipmentRoutes");
-const dal = require("./services/user_pg.DB_ACCESS");
+const dal = require("./services/user_pg.DAL");
 const events = require("events");
 class Event extends events {}
 const emitEvent = new Event();
 const app = express();
 const PORT = 3000;
-
+const { max } = require("date-fns");
+const { program } = require("commander");
+var cookieParser = require("cookie-parser");
+const {
+  getEquipment,
+  addEquipment,
+  deleteEquipment,
+} = require("./services/constEquip_mg.DAL");
 ////////////////////////////////////////////////
 // global constants
 global.DEBUG = true;
@@ -24,7 +31,8 @@ app.use("/images", express.static("views/images"));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-
+app.use(express.static("favicon.ico"));
+app.use(cookieParser());
 ////////////////////////////////////////////////
 // app special function routers
 
@@ -40,16 +48,37 @@ app.use("/equipment", equipmentRoutes.router);
 
 app.get("/", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("index.ejs");
+  res.render("index.ejs", { req: req });
 });
 
 app.get("/login", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("login.ejs");
+  res.render("login.ejs", { req: req });
 });
-
+app.get("/about", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("about.ejs", { req: req });
+});
+app.get("/success", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("success.ejs", { req: req });
+});
+// // get for search
+// app.get("/search", async (req, res) => {
+//   emitEvent.emit("log", "app", `GET`, req.url);
+//   res.render("search.ejs");
+// });
+// // post for search
+// app.post("/search", async (req, res) => {
+//   emitEvent.emit("log", "app", `POST`, req.url);
+//   res.render("search.ejs");
+// });
+app.get("favicon.ico", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("favicon.ico");
+});
 app.post("/login", async (req, res) => {
-  const username = await req.body.username;
+  const email = await req.body.email;
   const password = await req.body.password;
   try {
     if (DEBUG) {
@@ -57,13 +86,18 @@ app.post("/login", async (req, res) => {
     }
     emitEvent.emit("log", "app", `POST`, req.url);
 
-    const userData = await dal.getUserByName(username);
+    const userData = await dal.getUserByEmail(email);
     if (
-      username === userData.rows[0].name &&
+      email === userData.rows[0].email &&
       (await bcrypt.compare(password, userData.rows[0].password))
     ) {
       console.log("Login succesful");
-      res.redirect("/");
+      res.cookie(
+        "email",
+        userData.rows[0].email,
+        (maxAge = 1000 * 60 * 60 * 24 * 7)
+      );
+      res.redirect("/success");
     } else {
       res.send(
         '<script>alert("Invalid credentials. Please try again."); window.location.href = "/login";</script>'
@@ -77,7 +111,11 @@ app.post("/login", async (req, res) => {
 
 app.get("/signup", async (req, res) => {
   emitEvent.emit("log", "app", `GET`, req.url);
-  res.render("signup.ejs");
+  res.render("signup.ejs", { req: req });
+});
+app.get("/logout", async (req, res) => {
+  res.clearCookie("email");
+  res.redirect("/");
 });
 
 app.post("/signup", async (req, res) => {
@@ -95,6 +133,37 @@ app.post("/signup", async (req, res) => {
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.get("/search-page", async (req, res) => {
+  emitEvent.emit("log", "app", `GET`, req.url);
+  res.render("search.ejs", { req: req });
+});
+
+app.post("/search", async (req, res) => {
+  const { database, query } = req.body;
+
+  // Validate database type and call right function
+  if (database === "mongo") {
+    // We pass the query into getEquipment function
+    try {
+      await getEquipment(req, res, query);
+    } catch (error) {
+      console.error("Error retrieving equipment data:", error);
+      res.status(500).json({
+        success: false,
+        error: "Internal Server Error",
+      });
+    }
+  } else if (database === "postgres") {
+    console.log(
+      "We misunderstood this part of the assignment until we got the UI stage... There is a working mock user database that uses postgres with functionality for commands to edit, add or delete. The mongo DB is for the products list... so we're just going to leave this here for now. : ) <3"
+    );
+  } else {
+    res.status(400).json({
+      success: false,
+      error: "Invalid database selected",
+    });
   }
 });
 

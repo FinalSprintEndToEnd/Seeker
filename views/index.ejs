@@ -1,11 +1,29 @@
 <html lang="en">
   <head>
     <title>Landing page</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/style.css" />
   </head>
+  <header><%- include('partials/header.ejs', {req: req}) %></header>
   <body>
-    <%- include('partials/header.ejs') %>
-    <div id="display"></div>
-    <%- include('partials/footer.ejs') %>
+    <div id="display" class="landing">
+      <% if (!req.cookies.email) { %>
+      <h3
+        style="
+          font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        "
+      >
+        Please login to view inventory
+      </h3>
+      <% } else { %>
+      <h3
+        style="
+          font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        "
+      >
+        Press Search to view our broad selection of products
+      </h3>
+      <% } %>
+    </div>
   </body>
+  <footer><%- include('partials/footer.ejs') %></footer>
 </html>

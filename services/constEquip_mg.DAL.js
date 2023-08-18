@@ -18,21 +18,22 @@ const dbName = "construction_equipment";
 const collectionName = "cost_details";
 
 // Define the function to get equipment data
-const getEquipment = async (req, res) => {
+const getEquipment = async (req, res, query) => {
   const db = client.db(dbName);
   const collection = db.collection(collectionName);
 
-  // Fetch equipment data from the collection
+  // Construct the filter based on the search query
+  const filter = {
+    equipment_type: query,
+  };
+
+  // Fetch equipment data from the collection with the filter
   await collection
-    .find({})
+    .find(filter)
     .toArray()
     .then((equipment) => {
-      // Respond with JSON data
-      res.status(200).json({
-        success: true,
-        message: "Equipment data retrieved successfully",
-        data: equipment,
-      });
+      // console.log(equipment);
+      res.render("search.ejs", { equipment: equipment, req: req });
     })
     .catch((error) => {
       console.error("Error retrieving equipment data:", error);

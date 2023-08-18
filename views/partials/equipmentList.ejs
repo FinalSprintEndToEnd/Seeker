@@ -1,0 +1,23 @@
+<table>
+  <thead>
+    <tr>
+      <th>Equipment Type</th>
+      <th>Equipment Brand</th>
+      <th>Equipment Model</th>
+      <th>Equipment Year</th>
+      <th>Purchase Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% equipment.forEach((item) => { %>
+    <tr>
+      <td><%= item.equipment_type %></td>
+      <td><%= item.equipment_brand %></td>
+      <td><%= item.equipment_model %></td>
+      <td><%= item.equipment_year %></td>
+      <td><%= item.purchase_price %></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+<% console.log(equipment) %>
